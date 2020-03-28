@@ -3,6 +3,13 @@
 aurpath="/usr/src/AUR"
 createdpath=0
 
+echo "Checking for update log directory"
+
+if [ ! -d updatelogs ]; then
+	echo "Log directory missing. Creating"
+	mkdir updatelogs
+fi
+
 echo "Checking AUR path" 
 
 # If aur path does not exist, create it and give it change the ownership to local user
@@ -15,14 +22,11 @@ if [ ! -d "$aurpath" ]; then
 	echo "$USER now owns $aurpath."
 fi
 
-# move to aur path and then check log directory. Create if it does not exist
-cd "$aurpath"
+echo "Checking repository log directory" 
 
-echo "Checking log directory" 
-
-if [ ! -d "log" ]; then
-	echo "Creating log directory"
-	mkdir log
+if [ ! -d "$aurpath"/log ]; then
+	echo "Repository log directory does not exist. Creating"
+	mkdir "$aurpath"/log
 fi
 
 # If aur directory had to be created, then move update into the directory. 
@@ -30,7 +34,7 @@ fi
 
 if [[ "$createdpath" -eq 1 ]]; then
 	echo "Moving myself to $aurpath."
-	mv path=$(pwd) "$aurpath"
+	mv $(pwd) "$aurpath"
 fi
 
 echo "Setup complete. Exiting"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-packagelist="update/aurpackages.log"
+packagelist="aur-update/aurpackages.log"
 haderror=0
 
 cd ..
@@ -18,7 +18,7 @@ while IFS= read -r package; do
 		# If there is not, run git clone using the package name
 		
 		# There should be a way to handle cases where the repository is empty
-		echo "Repository does not exist. Creating a new one."
+		echo "Repository $package does not exist. Creating a new one."
 		status=$(git clone https://aur.archlinux.org/"$package".git 2>&1>&0)
 		code=$?
 		
@@ -32,7 +32,7 @@ while IFS= read -r package; do
 
 	# Create a corresponding log directory if it does not exist
 	if [ ! -d log/$package ]; then 
-		echo "Making a log directory for repository"
+		echo "Making a log directory for repository $package"
 		mkdir log/$package
 	fi
 

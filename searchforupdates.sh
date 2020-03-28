@@ -1,10 +1,10 @@
 #!/bin/bash
 
 cd ..
-packagelist="update/aurpackages.log"
+packagelist="aur-update/aurpackages.log"
 updatechecker="lastupdate.sh"
-siteversion="update/getsiteversion.sh"
-outofdate="update/outofdate.log"
+siteversion="aur-update/getsiteversion.sh"
+outofdate="aur-update/outofdate.log"
 haderror=0
 
 echo "Checking for updates."
@@ -16,7 +16,7 @@ while IFS= read -r package; do
 	
 	echo "Success. Latest version on site: $siteupdate."
 
-	cd update
+	cd aur-update
 	userupdate=$(./"$updatechecker" "$package")
 	code=$?
 	cd ..

@@ -9,6 +9,10 @@ toupdate="outofdate.log"
 # run checksetup and create log
 
 echo "Checking setup"
+if [ ! -d "$logpath" ]; then
+	mkdir "$logpath"
+fi
+
 echo $(date) >> "$logpath"/"$setuplog"
 ./checksetup.sh >> "$logpath"/"$setuplog"
 echo "Check complete. You will find the log in $logpath."
