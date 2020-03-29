@@ -1,9 +1,9 @@
 #!/bin/bash
+source ~/.aurconfig
 
 # This allows some independence of where the aur-update program is, as well as where the
 # AUR repos are. 
 packagelist="$(pwd)/aurpackages.log"
-aurrepos="/usr/src/AUR"
 repologsdir="${aurrepos}/log"
 haderror=0
 

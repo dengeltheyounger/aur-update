@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ ! -f ~/.aurconfig ]; then
+	"aurpath=\"/usr/src/AUR\"" > ~/.aurconfig
+fi
+
 # Path to aur-update
 updatepath=$(pwd)
 # Path to the aur-update logs
@@ -18,15 +22,8 @@ fi
 # Each aur-update log will be preceeded by a date and time stamp
 # run checksetup and create log
 echo $(date) >> "$setuplog"
-temp=$(sh "${updatepath}/checksetup.sh")
-# Path may have moved, hence the need to set paths again 
-updatepath=$(pwd)
-logpath="${updatepath}/updatelogs"
-setuplog="${logpath}/setup.log"
-repolog="${logpath}/checkrepos.log"
-searchresults="${logpath}/searchforupdates.sh"
-toupdate="${updatepath}/outofdate.log"
-temp >> "$setuplog"
+./checksetup.sh >> "$setuplog"
+
 echo "Check complete. You will find the log in ${logpath}."
 
 # Update list of foreign packages
@@ -35,7 +32,7 @@ sudo pacman -Qm > aurpackages.log
 # run checkrepos and create log
 echo "Checking repositories"
 echo $(date) >> "$repolog"
-sh "${updatepath}/checkrepos.sh" >> "$repolog"
+./checkrepos.sh >> "$repolog"
 code=$?
 
 if [[ "$code" -eq 1 ]]; then
@@ -47,7 +44,7 @@ fi
 # run searchforupdates and create log.
 echo "Checking for updates. This may take a while."
 echo $(date) >> "$searchresults"
-sh "${updatepath}/searchforupdates.sh" >> "$searchresults"
+./searchforupdates.sh >> "$searchresults"
 code=$?
 
 if [[ "$code" -eq 1 ]]; then
@@ -61,7 +58,7 @@ if [ -f "$toupdate" ] && [ -s "$toupdate" ]; then
 		echo $(package="${%% *}")
 	done
 	
-	echo "Enter the command \"update\" in order to use the update service."
+	echo "If you wish to update, you will need to run the update script."
 	
 else
 	echo "All packages are up to date."
