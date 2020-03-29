@@ -1,14 +1,17 @@
 #!/bin/bash
 
-packagelist="aur-update/aurpackages.log"
+# This allows some independence of where the aur-update program is, as well as where the
+# AUR repos are. 
+packagelist="$(pwd)/aurpackages.log"
+aurrepos="/usr/src/AUR"
+repologsdir="${aurrepos}/log"
 haderror=0
 
-cd ..
+cd "$aurrepos"
 
 echo "Checking repositories. Will create them if they do not exist"
 
 # Iterate through package names and see if there's a corresponding directory.
-
 while IFS= read -r package; do
 	package="${package%% *}"
 	
@@ -18,7 +21,7 @@ while IFS= read -r package; do
 		# If there is not, run git clone using the package name
 		
 		# There should be a way to handle cases where the repository is empty
-		echo "Repository $package does not exist. Creating a new one."
+		echo "Repository ${package} does not exist. Creating a new one."
 		status=$(git clone https://aur.archlinux.org/"$package".git 2>&1>&0)
 		code=$?
 		
@@ -31,9 +34,9 @@ while IFS= read -r package; do
 	fi
 
 	# Create a corresponding log directory if it does not exist
-	if [ ! -d log/$package ]; then 
+	if [ ! -d "${repologsdir}/${package}" ]; then 
 		echo "Making a log directory for repository $package"
-		mkdir log/$package
+		mkdir "${repologsdir}/${package}"
 	fi
 
 done < "$packagelist"

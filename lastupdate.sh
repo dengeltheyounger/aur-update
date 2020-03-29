@@ -1,6 +1,7 @@
 #!/bin/bash
 
-packagelog="aurpackages.log"
+aurupdate=$(pwd)
+packagelog="${aurupdate}/aurpackages.log"
 
 # Make sure that one argument was given
 

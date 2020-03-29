@@ -1,53 +1,60 @@
 #!/bin/bash
 
-setuplog="setup.log"
-logpath="updatelogs"
-repolog="checkrepos.log"
-searchresults="searchforupdates.log"
-toupdate="outofdate.log"
+# Path to aur-update
+updatepath=$(pwd)
+# Path to the aur-update logs
+logpath="${updatepath}/updatelogs"
+setuplog="${logpath}/setup.log"
+repolog="${logpath}/checkrepos.log"
+searchresults="${logpath}/searchforupdates.log"
+toupdate="${updatepath}/outofdate.log"
 
-# run checksetup and create log
-
+# aur-update does not come with a log directory. It will create one on first run
 echo "Checking setup"
 if [ ! -d "$logpath" ]; then
 	mkdir "$logpath"
 fi
 
-echo $(date) >> "$logpath"/"$setuplog"
-./checksetup.sh >> "$logpath"/"$setuplog"
-echo "Check complete. You will find the log in $logpath."
+# Each aur-update log will be preceeded by a date and time stamp
+# run checksetup and create log
+echo $(date) >> "$setuplog"
+temp=$(sh "${updatepath}/checksetup.sh")
+# Path may have moved, hence the need to set paths again 
+updatepath=$(pwd)
+logpath="${updatepath}/updatelogs"
+setuplog="${logpath}/setup.log"
+repolog="${logpath}/checkrepos.log"
+searchresults="${logpath}/searchforupdates.sh"
+toupdate="${updatepath}/outofdate.log"
+temp >> "$setuplog"
+echo "Check complete. You will find the log in ${logpath}."
 
 # Update list of foreign packages
-
 sudo pacman -Qm > aurpackages.log
 
 # run checkrepos and create log
-
 echo "Checking repositories"
-echo $(date) >> "$logpath"/"$repolog"
-./checkrepos.sh >> "$logpath"/"$repolog"
+echo $(date) >> "$repolog"
+sh "${updatepath}/checkrepos.sh" >> "$repolog"
 code=$?
 
 if [[ "$code" -eq 1 ]]; then
-	echo "There repository was non-existent. You will find the log in $logpath."
-
+	echo "There was a repository that was non-existent. You will find the log in ${logpath}."
 else
 	echo "Check successful. No errors discovered."
 fi
 
 # run searchforupdates and create log.
-
 echo "Checking for updates. This may take a while."
-echo $(date) >> "$logpath"/"$searchresults"
-./searchforupdates.sh >> "$logpath"/"$searchresults"
+echo $(date) >> "$searchresults"
+sh "${updatepath}/searchforupdates.sh" >> "$searchresults"
 code=$?
 
 if [[ "$code" -eq 1 ]]; then
-	echo "No match was found when searching through package list. You will find the log in $logpath."
+	echo "No match was found when searching through package list. You will find the log in ${logpath}."
 fi
 
 # If the list of packages to update exists and is not empty, then print list
-
 if [ -f "$toupdate" ] && [ -s "$toupdate" ]; then
 	echo "The following packages have updates available"
 	while IFS= read -r package; do
