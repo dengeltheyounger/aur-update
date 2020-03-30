@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ ! -f ~/.aurconfig ]; then
-	"aurpath=\"/usr/src/AUR\"" > ~/.aurconfig
+	echo "aurpath=\"/usr/local/src/AUR\"" > ~/.aurconfig
 fi
 
 # Path to aur-update
@@ -21,7 +21,11 @@ fi
 
 # Each aur-update log will be preceeded by a date and time stamp
 # run checksetup and create log
+if [ -f "$setuplog" ]; then
+	echo "" >> "$setuplog"
+fi
 echo $(date) >> "$setuplog"
+echo "" >> "$setuplog"
 ./checksetup.sh >> "$setuplog"
 
 echo "Check complete. You will find the log in ${logpath}."
@@ -31,7 +35,12 @@ sudo pacman -Qm > aurpackages.log
 
 # run checkrepos and create log
 echo "Checking repositories"
+
+if [ -f "$repolog" ]; then
+	echo "" >> "$repolog"
+fi
 echo $(date) >> "$repolog"
+echo "" >> "$repolog"
 ./checkrepos.sh >> "$repolog"
 code=$?
 
@@ -43,7 +52,11 @@ fi
 
 # run searchforupdates and create log.
 echo "Checking for updates. This may take a while."
+if [ -f "$searchresults" ]; then
+	echo "" >> "$searchresults"
+fi
 echo $(date) >> "$searchresults"
+echo "" >> "$searchresults"
 ./searchforupdates.sh >> "$searchresults"
 code=$?
 

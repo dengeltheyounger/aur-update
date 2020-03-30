@@ -13,13 +13,10 @@ and the aur-update repositories are independent. The bash scripts do not need th
 to be in certain locations in relation to one another (for example, the aur-update repo
 does not need to be location within the AUR directory). 
 
-If you wish to change the location of the AUR repositories, you will need to alter 
-all of the scripts so that they know the new path. Luckily, you will only need to change
-the paths once, since each path is hardcoded as a variable at the beginning of the
-script. Nevertheless, that's still tedious. 
-
-For this reason, I will be planning to use a config file that will allow the user to
-specify once the location of the repository. This is partially implemented, but most
-of the scripts will expect the location to be "/usr/src/AUR". 
+One of the newest additions is a simpler way to move the repository if you wish. 
+Included in the bash project is a file called "moverepo.sh". The proper way to use this
+script is give it a path to move the AUR directory to as an argument. moverepo will do 
+two things: firstly, it will move the repository. Secondly, it will amend the .aurconfig
+file so that all of the other scripts know the new path of the AUR directory.
 
 You will need to manually add checkup and update to path.

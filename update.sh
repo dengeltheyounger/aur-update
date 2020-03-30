@@ -1,20 +1,22 @@
 #!/bin/bash
 
+source ~/.aurconfig
+
 # paths to the necessary files
 aurupdate=$(pwd)
 updatelog="${aurupdate}/aurpackages.log"
 toupdate="${aurupdate}/outofdate.log"
 siteversion="${aurupdate}/getsiteversion.sh"
-aurrepos="/usr/src/AUR"
-aurlog="${aurrepos}/log"
-logname="$(date +%Y%m%d)" 
+aurlog="${aurpath}/log"
+logname="$(date +%Y%m%d)"
+logheader=$(date)
 
 # If outofdate.log doesn't exist, then exit
 if [ ! -f "${toupdate}" ]; then
 	exit 0
 fi
 
-cd "$aurrepos"
+cd "$aurpath"
 
 # Iterate through each package in outofdate.log and update. Send information to appropriate log
 while IFS= read -r package; do
@@ -29,7 +31,7 @@ while IFS= read -r package; do
 
 	echo "Entering repository. I will need your permission to run makepkg."
 
-	yes | makepkg -rsci | tee > "${aurlog}/${package}/${logname}"
+	yes | makepkg -rsci | tee >> $("${aurlog}/${package}/${logname}" << "$logheader") 
 	
 	code="${PIPESTATUS[1]}"
 
@@ -38,7 +40,7 @@ while IFS= read -r package; do
 		continue
 	fi
 
-	cd "$aurrepos"
+	cd "$aurpath"
 
 	echo "Updating log for ${package}"
 	

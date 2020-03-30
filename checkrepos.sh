@@ -4,10 +4,10 @@ source ~/.aurconfig
 # This allows some independence of where the aur-update program is, as well as where the
 # AUR repos are. 
 packagelist="$(pwd)/aurpackages.log"
-repologsdir="${aurrepos}/log"
+repologsdir="${aurpath}/log"
 haderror=0
 
-cd "$aurrepos"
+cd "$aurpath"
 
 echo "Checking repositories. Will create them if they do not exist"
 

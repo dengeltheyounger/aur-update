@@ -1,13 +1,11 @@
 #!/bin/bash
 source ~/.aurconfig
 
-# This can be changed by the user as needed. Other scripts will need to be informed
-aurpath="/usr/src/AUR"
 # This will allow the user to more easily change where the aur-update logs are found. 
 updatelogpath="$(pwd)/updatelogs"
 aurlogs="${aurpath}/log"
 
-echo "Checking for update log directory"
+echo "Checking for update log directory."
 
 # If the updatelogs directory does not exist, create it.
 if [ ! -d "$updatelogpath" ]; then
@@ -16,6 +14,8 @@ if [ ! -d "$updatelogpath" ]; then
 	echo "Log directory missing. Creating"
 	sudo mkdir "$updatelogpath"
 	sudo chown "$USER" "$updatelogpath"
+else
+	echo "Found update log directory."
 fi
 
 echo "Checking AUR path" 
@@ -26,6 +26,8 @@ if [ ! -d "$aurpath" ]; then
 	sudo mkdir "$aurpath"
 	sudo chown "$USER" "$aurpath"
 	echo "${USER} now owns ${aurpath}."
+else
+	echo "AUR path found."
 fi
 
 echo "Checking repository log directory" 
@@ -34,6 +36,8 @@ echo "Checking repository log directory"
 if [ ! -d "$aurlogs" ]; then
 	echo "Repository log directory does not exist. Creating"
 	mkdir "$aurlogs"
+else
+	echo "Repository log directory found."
 fi
 
 echo "Setup complete. Exiting"
