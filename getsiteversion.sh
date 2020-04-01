@@ -4,7 +4,7 @@ getsiteversion() {
 	local temp
 	# Make sure that at least one argument was given
 	if [[ "$#" -ne 1 ]]; then
-		exit 1
+		return 1
 	fi
 
 	# Use wget to download html and store in temp. Curl can also be used
@@ -19,6 +19,6 @@ getsiteversion() {
 
 	echo "$siteupdate"
 
-	exit 0
+	return 0
 }
 

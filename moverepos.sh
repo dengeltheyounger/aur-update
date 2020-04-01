@@ -3,7 +3,7 @@
 moverepos() {
 
 	if [[ "$#" -ne 1 ]]; then
-		exit 1
+		return 1
 	fi
 
 	# Sudo is used in case the directory into which the directory is moved is
@@ -14,5 +14,5 @@ moverepos() {
 
 	sed -i "s:aurpath=.*:aurpath=${newpath}:" ~/.aurconfig
 
-	exit 0
+	return 0
 }

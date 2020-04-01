@@ -7,11 +7,12 @@ parser() {
 
 	if [[ "$#" -eq 0 ]]; then
 		echo "aur-update usage: $(basename $0) [-C] [-M destination] [-U] [-v]"
+		return 1
 	fi
 
 	checkupvar=0
 	movereposvar=0
-	movedest=y
+	movedest=
 	upgradevar=0
 	verbose=0
 
@@ -32,14 +33,14 @@ parser() {
 			;;
 			*)
 				echo "aur-update usage: $(basename $0) [-C] [-M destination] [-U] [-v]"
-				exit 1
+				return 1
 			;;
 		esac
 	done
 	shift $(( $OPTIND-1 ))
 
 	if [[ "$movereposvar" -eq 1 ]]; then
-		standardopt=$(moverepos "${movedest}")
+		moverepos "${movedest}"
 	fi
 
 	if [[ "$checkupvar" -eq 1 ]]; then
@@ -50,5 +51,11 @@ parser() {
 		update 0>&1
 	fi
 
-	exit 0
+	code=$?
+
+	if [[ "$code" -eq 1 ]]; then
+		return 2
+	fi
+
+	return 0
 }

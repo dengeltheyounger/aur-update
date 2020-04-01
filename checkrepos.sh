@@ -45,8 +45,8 @@ checkrepos() {
 
 	# exit status will be the same value as haderror
 	if [[ "$haderror" -eq 1 ]]; then
-		exit 1
+		return 1
 	fi
 
-	exit 0
+	return 0
 }

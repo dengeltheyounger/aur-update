@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source setaurconfig.sh
 source ~/.aurconfig
 source checkrepos.sh
 source checksetup.sh
@@ -17,7 +17,7 @@ code=$?
 if [[ "$code" -eq 1 ]]; then
 	exit 1
 
-else if [[ "$code" -eq 0 ]]; then
+elif [[ "$code" -eq 0 ]]; then
 	exit 0
 fi
 

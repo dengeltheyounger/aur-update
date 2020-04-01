@@ -1,4 +1,4 @@
-#!/bin/bash
+	#!/bin/bash
 
 update() {
 	# paths to the necessary files
@@ -12,7 +12,7 @@ update() {
 
 	# If outofdate.log doesn't exist, then exit
 	if [ ! -f "${toupdate}" ]; then
-		exit 0
+		return 1
 	fi
 
 	cd "$aurpath"
@@ -28,8 +28,10 @@ update() {
 
 		cd "$package"
 		echo "Entering repository. I will need your permission to run makepkg."
+		echo "Running git pull."
+		git pull origin master
 		echo "$logheader" >> "${aurlog}/${package}/${logname}.log"
-		yes | makepkg -rsci | tee "${aurlog}/${package}/${logname}.log"
+		yes | makepkg -rsci | script -ca "${aurlog}/${package}/${logname}.log"
 	
 		local code="${PIPESTATUS[1]}"
 
@@ -49,5 +51,5 @@ update() {
 	# Remove outofdate.log when finished
 	rm "$toupdate"
 
-	exit 0
+	return 0
 }

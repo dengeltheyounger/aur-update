@@ -42,5 +42,5 @@ checksetup() {
 
 	echo "Setup complete. Exiting"
 
-	exit 0
+	return 0
 }

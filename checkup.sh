@@ -1,10 +1,6 @@
 #!/bin/bash
 
 checkup() {
-	if [ ! -f ~/.aurconfig ]; then
-		echo "aurpath=\"/usr/local/src/AUR\"" > ~/.aurconfig
-		echo "aurupdate=\"~/aur-update\"" >> ~/.aurconfig
-	fi
 
 	# Path to the aur-update logs
 	local logpath="${aurupdate}/updatelogs"
@@ -36,7 +32,6 @@ checkup() {
 	sudo pacman -Qm > aurpackages.log
 
 	# run checkrepos and create log
-	echo "Checking repositories"
 
 	if [ -f "$repolog" ]; then
 		echo "" >> "$repolog"
@@ -79,5 +74,5 @@ checkup() {
 		echo "All packages are up to date."
 	fi
 
-	exit 0
+	return 0
 }
