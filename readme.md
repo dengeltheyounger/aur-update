@@ -1,22 +1,31 @@
-This program is fairly simple. checkup.sh will automates the process of checking for
-updates. If needed, it will also perform a first time setup. update.sh will go through
-the process of updating each package within the repository. 
+This program is fairly simple. aur-update.sh is the script that is intended to be
+executed. This program will allow you to check for updates, move the AUR respositories,
+and update. The -C option checks for updates. The -M moves the repositories, but will
+need a destination parameter. -U performs the updates. 
 
-This is not a very smart script. If there are any errors, the most it will do is tell
-you. Given how dumb it is, it keeps numerous logs so that in the case of an error, you
-will be able to go through and see it. The logs for the AUR repositories will be kept in
-a log directory within the AUR directory. The script logs will be kept within a log 
-directory in the aur-update repository itself. 
+By default, the AUR repositories will be maintained in /usr/local/src/AUR. This is
+specifically defined in .aurconfig, which is created by checkup.sh The location of the
+repositories can be changed after the first time setup using the -M option.
+Alternatively, you can alter checkup.sh before the first time run in order to define 
+where the AUR repositories are to be first created (or where to find them if you already
+maintain the repositories yourself).
 
-I have made numerous changes since the last commit. At this point, the AUR repository 
-and the aur-update repositories are independent. The bash scripts do not need them to 
-to be in certain locations in relation to one another (for example, the aur-update repo
-does not need to be location within the AUR directory). 
+I have not implemented the verbose option yet. This will come in a future commit.
 
-One of the newest additions is a simpler way to move the repository if you wish. 
-Included in the bash project is a file called "moverepo.sh". The proper way to use this
-script is give it a path to move the AUR directory to as an argument. moverepo will do 
-two things: firstly, it will move the repository. Secondly, it will amend the .aurconfig
-file so that all of the other scripts know the new path of the AUR directory.
+Some future plans:
+I plan to have two different versions of this project. One will have only the ability to
+check for updates and update. There will be no aur-update.sh script. Instead, the user
+will have to run checkup and update manually. This version will give up functionality 
+in order to stay simple and lightweight.
 
-You will need to manually add checkup and update to path.
+The version that I am currently working towards is designed to be scalable. It will be
+more heavy weight but will also have the capacity to feature many different options. I 
+may add options to download packages from the AUR as well as error handling features. 
+
+Finally, I plan to add an installer in a future version. The installer will consolidate
+all of the scripts into a single one, and then will move the consolidated script into
+/usr/bin. The aur-update repository and scripts will remain, however, in case the user
+would like to examine the source code. Moreover, I intend for the program to runnable
+with or without the installer. This is intended to allow some flexibility for the user.
+If there are any issues or expansions in functionality you would like to see, let me 
+know.

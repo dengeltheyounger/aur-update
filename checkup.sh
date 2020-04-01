@@ -1,80 +1,83 @@
 #!/bin/bash
 
-if [ ! -f ~/.aurconfig ]; then
-	echo "aurpath=\"/usr/local/src/AUR\"" > ~/.aurconfig
-fi
+checkup() {
+	if [ ! -f ~/.aurconfig ]; then
+		echo "aurpath=\"/usr/local/src/AUR\"" > ~/.aurconfig
+		echo "aurupdate=\"~/aur-update\"" >> ~/.aurconfig
+	fi
 
-# Path to aur-update
-updatepath=$(pwd)
-# Path to the aur-update logs
-logpath="${updatepath}/updatelogs"
-setuplog="${logpath}/setup.log"
-repolog="${logpath}/checkrepos.log"
-searchresults="${logpath}/searchforupdates.log"
-toupdate="${updatepath}/outofdate.log"
+	# Path to the aur-update logs
+	local logpath="${aurupdate}/updatelogs"
+	local setuplog="${logpath}/setup.log"
+	local repolog="${logpath}/checkrepos.log"
+	local searchresults="${logpath}/searchforupdates.log"
+	local toupdate="${aurupdate}/outofdate.log"
+	local package
+	local available
 
-# aur-update does not come with a log directory. It will create one on first run
-echo "Checking setup"
-if [ ! -d "$logpath" ]; then
-	mkdir "$logpath"
-fi
+	# aur-update does not come with a log directory. It will create one on first run
+	echo "Checking setup"
+	if [ ! -d "$logpath" ]; then
+		mkdir "$logpath"
+	fi
 
-# Each aur-update log will be preceeded by a date and time stamp
-# run checksetup and create log
-if [ -f "$setuplog" ]; then
+	# Each aur-update log will be preceeded by a date and time stamp
+	# run checksetup and create log
+	if [ -f "$setuplog" ]; then
+		echo "" >> "$setuplog"
+	fi
+	echo $(date) >> "$setuplog"
 	echo "" >> "$setuplog"
-fi
-echo $(date) >> "$setuplog"
-echo "" >> "$setuplog"
-./checksetup.sh >> "$setuplog"
+	checksetup 0>&1 | tee "$setuplog">&1
 
-echo "Check complete. You will find the log in ${logpath}."
+	echo "Check complete. You will find the log in ${logpath}."
 
-# Update list of foreign packages
-sudo pacman -Qm > aurpackages.log
+	# Update list of foreign packages
+	sudo pacman -Qm > aurpackages.log
 
-# run checkrepos and create log
-echo "Checking repositories"
+	# run checkrepos and create log
+	echo "Checking repositories"
 
-if [ -f "$repolog" ]; then
+	if [ -f "$repolog" ]; then
+		echo "" >> "$repolog"
+	fi
+	echo $(date) >> "$repolog"
 	echo "" >> "$repolog"
-fi
-echo $(date) >> "$repolog"
-echo "" >> "$repolog"
-./checkrepos.sh >> "$repolog"
-code=$?
+	checkrepos 0>&1 | tee "$repolog">&1
+	local code=$?
 
-if [[ "$code" -eq 1 ]]; then
-	echo "There was a repository that was non-existent. You will find the log in ${logpath}."
-else
-	echo "Check successful. No errors discovered."
-fi
+	if [[ "$code" -eq 1 ]]; then
+		echo "There was a repository that was non-existent. You will find the log in ${logpath}."
+	else
+		echo "Check successful. No errors discovered."
+	fi
 
-# run searchforupdates and create log.
-echo "Checking for updates. This may take a while."
-if [ -f "$searchresults" ]; then
+	# run searchforupdates and create log.
+	echo "Checking for updates. This may take a while."
+	if [ -f "$searchresults" ]; then
+		echo "" >> "$searchresults"
+	fi
+	echo $(date) >> "$searchresults"
 	echo "" >> "$searchresults"
-fi
-echo $(date) >> "$searchresults"
-echo "" >> "$searchresults"
-./searchforupdates.sh >> "$searchresults"
-code=$?
+	searchforupdates 0>&1 | tee "$searchresults"
+	code=$?
 
-if [[ "$code" -eq 1 ]]; then
-	echo "No match was found when searching through package list. You will find the log in ${logpath}."
-fi
+	if [[ "$code" -eq 1 ]]; then
+		echo "No match was found when searching through package list. You will find the log in ${logpath}."
+	fi
 
-# If the list of packages to update exists and is not empty, then print list
-if [ -f "$toupdate" ] && [ -s "$toupdate" ]; then
-	echo "The following packages have updates available"
-	while IFS= read -r package; do
-		echo $(package="${%% *}")
-	done
+	# If the list of packages to update exists and is not empty, then print list
+	if [ -f "$toupdate" ] && [ -s "$toupdate" ]; then
+		echo "The following packages have updates available"
+		while IFS= read -r available; do
+			echo "$available"
+		done < "$toupdate"
 	
-	echo "If you wish to update, you will need to run the update script."
+		echo "If you wish to update, you will need to run the update script."
 	
-else
-	echo "All packages are up to date."
-fi
+	else
+		echo "All packages are up to date."
+	fi
 
-exit 0
+	exit 0
+}
