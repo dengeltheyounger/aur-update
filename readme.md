@@ -29,3 +29,12 @@ would like to examine the source code. Moreover, I intend for the program to run
 with or without the installer. This is intended to allow some flexibility for the user.
 If there are any issues or expansions in functionality you would like to see, let me 
 know.
+
+Change log:
+03/01/2020
+	Made heavy revisions to lastupdate.sh and getsiteversion.sh. Instead of using curl, 
+	they pull from the PKGBUILD. getsiteversion does a git pull. If the repo is already 
+	up to date, the check is much quicker than with curl. It'll take longer if the repo
+	is out of date. This will be fine for most users, however, since they will want to 
+	update anyway.
+	

@@ -3,8 +3,6 @@
 searchforupdates() {
 	# Paths to the appropriate files
 	local packagelist="${aurupdate}/aurpackages.log"
-	local updatechecker=lastupdate
-	local siteversion=getsiteversion
 	local outofdate="${aurupdate}/outofdate.log"
 	local haderror=0
 	local package
@@ -14,18 +12,16 @@ searchforupdates() {
 	# Iterate through each package repository.
 	while IFS= read -r package; do
 		package="${package%% *}"
-		echo "Package ${package}: checking for last update."
-
-		# Check the site's package version
-		local siteupdate=$("$siteversion" "$package") 
-	
-		echo "Success. Latest version on site: ${siteupdate}."
+		echo "Package ${package}: checking for user's last update."
 
 		# Check user's package version
-		local userupdate=$("$updatechecker" "$package")
+		local userupdate=$(lastupdate "$package")
 		local code=$?
 
 		echo "Latest version for user: ${userupdate}."
+
+		local siteupdate=$(getsiteversion "$package")
+		echo "Latest version on site: ${siteupdate}."
 	
 		if [[ "$code" -eq 2 ]]; then
 			echo "No update information found for ${package}. Error."
