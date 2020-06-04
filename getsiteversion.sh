@@ -1,7 +1,5 @@
 #!/bin/bash
 
-aurpath=/usr/local/src/AUR
-
 getsiteversion() {
 	# Make sure that at least one argument was given
 	if [[ "$#" -ne 1 ]]; then
@@ -28,5 +26,3 @@ getsiteversion() {
 
 	return 0
 }
-
-getsiteversion $1

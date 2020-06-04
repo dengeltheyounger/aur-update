@@ -1,4 +1,5 @@
 #!/bin/bash
+
 source setaurconfig.sh
 source ~/.aurconfig
 source checkrepos.sh

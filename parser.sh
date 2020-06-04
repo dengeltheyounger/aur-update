@@ -37,6 +37,7 @@ parser() {
 			;;
 		esac
 	done
+
 	shift $(( $OPTIND-1 ))
 
 	if [[ "$movereposvar" -eq 1 ]]; then
