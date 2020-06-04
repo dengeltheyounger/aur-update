@@ -37,4 +37,7 @@ Change log:
 	up to date, the check is much quicker than with curl. It'll take longer if the repo
 	is out of date. This will be fine for most users, however, since they will want to 
 	update anyway.
+
+06/04/2020
+	getsiteversion.sh had some bugs in it that I removed.
 	
