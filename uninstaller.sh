@@ -17,9 +17,9 @@ fi
 
 echo "Checking to see if aur-update is in ${HOME}/bin."
 
-if [[ -f "${HOME}/bin/aur-update" ]]; then
-	echo "Removing aur-update"
-	rm "${HOME}/bin/aur-update"
+if [[ -f "/usr/bin/aur-update" ]]; then
+	echo "Removing aur-update. Will need a password."
+	sudo rm "/usr/bin/aur-update"
 else
 	echo "aur-update not found. Moving on."
 fi
@@ -59,6 +59,3 @@ for file in *.sh; do
 		chmod -x "${file}"
 	fi
 done
-
-echo "Note that \"${HOME}/bin\" is not removed. In addition, .bashrc is not reset by this script"
-echo "The user will need to handle these things manually."

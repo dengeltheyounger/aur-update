@@ -1,6 +1,9 @@
 #!/bin/bash
 
-if [[ "$0" == "aurupdate.sh" ]]; then
+echo "${0}"
+
+if [[ "$0" == "./aur-update.sh" ]]; then
+	echo "Check succeeded"
 	source setaurconfig.sh
 	source checkrepos.sh
 	source checksetup.sh
@@ -11,9 +14,13 @@ if [[ "$0" == "aurupdate.sh" ]]; then
 	source searchforupdates.sh
 	source update.sh
 	source parser.sh
+else
+	echo "Check failed"
 fi
 
-source ~/.aurconfig
+setaurconfig
+
+source /home/"${USER}"/.aurconfig
 
 parser "$@"
 code=$?

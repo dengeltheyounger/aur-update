@@ -2,16 +2,7 @@
 
 path=$(pwd)
 
-chmod +x *.sh
-
 # Check to see if /home/bin exists. Create if not
-
-if [[ ! -d "${HOME}/bin" ]]; then
-	echo "${HOME}/bin does not exist. Creating."
-	mkdir "${HOME}/bin"
-else
-	echo "${HOME}/bin already exists. Moving on."
-fi
 
 currfile=$(basename "${0}")
 
@@ -54,14 +45,6 @@ chmod +x aur-update
 
 # Move the aur-update script into bin
 
-mv "${path}/aur-update" "${HOME}/bin"
-
-# Add an export home/bin to path into .bashrc (if it's not there already)
-
-if ! $(grep -m1 "export PATH=\"${HOME}/bin:$PATH\"" ${HOME}/.bashrc); then
-	echo "export PATH=\"${HOME}/bin:$PATH\"" >> "${HOME}/.bashrc"
-else
-	echo "${HOME}/bin already set in path!"
-fi
+sudo mv "${path}/aur-update" "/usr/bin"
 
 exit 0
